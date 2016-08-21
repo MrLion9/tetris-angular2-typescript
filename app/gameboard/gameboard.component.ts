@@ -20,7 +20,7 @@ import { GameService } from '../shared/index';
 })
 
 export class GameBoardComponent{
-    board: boolean[][];
+    board: string[][];
 
     constructor ( private gameService: GameService ){
         this.board = this.gameService.board;
