@@ -3,9 +3,14 @@ import { GameService } from '../shared/index';
 
 @Component({
     selector: 'detail-part',
-    template: `-`
+    template: `<div class="detail {{color}}"></div>`,
+    styleUrls: ['./app/gameboard/detail.component.css']
 })
 
 export class DetailComponent {
+    color: string;
 
+    constructor( private gameService: GameService ){
+        this.color = this.gameService.getColor();
+    }
 }

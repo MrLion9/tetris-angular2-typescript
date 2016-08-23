@@ -41,4 +41,8 @@ export class GameService{
         }
         return false;
     }
+
+    getColor (){
+        return this.activeDetail['color'];
+    }
 }

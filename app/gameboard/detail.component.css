@@ -1,0 +1,20 @@
+.detail{
+    width: 100%;
+    height: 100%;
+}
+
+.black{
+    background: #882dd0;
+}
+.yellow{
+    background: #e8d04d;
+}
+.green{
+    background: #da407d;
+}
+.red{
+    background: #37dd6a;
+}
+.blue{
+    background: #3753dd;
+}
