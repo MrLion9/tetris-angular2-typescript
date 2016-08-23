@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Details, BOARD_SIZE, COLORS, KEYS } from './index';
+import { start_point, Details, BOARD_SIZE, COLORS, KEYS } from './index';
 import * as _ from 'lodash';
 
 @Injectable()
 export class GameService{
     board: string[][];
+    activeDetail: {};
+    activePoint: number[];
 
     constructor (){
         this.setupBoard();
@@ -23,6 +25,20 @@ export class GameService{
     }
 
     resetDetail(){
-        console.log(Details[_.random(0, 4)]);
+        this.activeDetail = Details[_.random(0, 4)];
+
+        this.activePoint = start_point;
+    }
+
+    setDetailPart(y: number, x: number){
+        let pos = this.activeDetail['positions'][0];
+        for(let i = 0; i < pos.length; i++){
+            for (let j = 0; j < pos[i].length; j++){
+                if(pos[i][j] == 1) {
+                    if(this.activePoint[0] + i == y && this.activePoint[1] + j == x) return true;
+                }
+            }
+        }
+        return false;
     }
 }

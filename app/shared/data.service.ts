@@ -48,3 +48,5 @@ export const Details = [
     { positions: detail4, color: "red" },
     { positions: detail5, color: "black" }
 ];
+
+export const start_point = [0, 3];

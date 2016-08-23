@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { GameService } from '../shared/index';
+import {DetailComponent} from './detail.component';
 
 @Component({
     selector: 'game-board',
@@ -7,6 +8,7 @@ import { GameService } from '../shared/index';
         <div class="row" *ngFor="let column of board; let y=index">
 			<div class="column"
 			     *ngFor="let row of column; let x=index; trackBy:x">
+			     <detail-part *ngIf="setActiveDetailPart(y, x)"></detail-part>
 			</div>
 		</div>`,
     styles: [
@@ -16,6 +18,9 @@ import { GameService } from '../shared/index';
         '.row {height: 28px;}',
         '.column {border: 1px dotted #455A64; width: 28px; height: 28px; display: inline-block; vertical-align: middle;' +
         'text-align: center;}'
+    ],
+    directives: [
+        DetailComponent
     ]
 })
 
@@ -24,5 +29,9 @@ export class GameBoardComponent{
 
     constructor ( private gameService: GameService ){
         this.board = this.gameService.board;
+    }
+
+    setActiveDetailPart(y: number, x: number){
+        return this.gameService.setDetailPart(y, x);
     }
 }
