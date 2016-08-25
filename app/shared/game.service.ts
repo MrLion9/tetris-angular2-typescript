@@ -87,6 +87,17 @@ export class GameService{
     }
 
     resetDetail(){
+        if(typeof this.activeDetail != "undefined"){
+            let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
+            let self = this;
+            for(let i = 0; i < pos.length; i++){
+                for (let j = 0; j < pos[i].length; j++){
+                    if(pos[i][j] == 1) {
+                        self.board[this.activePoint[0] + i][this.activePoint[1] + j] = self.activeDetail['color'];
+                    }
+                }
+            }
+        }
 
         this.activeDetail = Details[_.random(0, 4)];
         this.activeDetail['actualPosition'] = 0;
@@ -104,6 +115,14 @@ export class GameService{
             }
         }
         return false;
+    }
+
+    setStaticDetailPart(y: number, x: number){
+        if(this.board[y][x] != "empty"){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     getColor (){

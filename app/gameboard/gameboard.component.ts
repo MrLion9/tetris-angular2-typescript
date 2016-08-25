@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { GameService } from '../shared/index';
 import {DetailComponent} from './detail.component';
+import {StaticDetailComponent} from './static-detail.component';
 
 @Component({
     selector: 'game-board',
@@ -9,6 +10,7 @@ import {DetailComponent} from './detail.component';
 			<div class="column"
 			     *ngFor="let row of column; let x=index; trackBy:x">
 			     <detail-part *ngIf="setActiveDetailPart(y, x)"></detail-part>
+			     <static-detail-part *ngIf="setStaticDetailPart(y, x)"></static-detail-part>
 			</div>
 		</div>`,
     styles: [
@@ -20,7 +22,8 @@ import {DetailComponent} from './detail.component';
         'text-align: center;}'
     ],
     directives: [
-        DetailComponent
+        DetailComponent,
+        StaticDetailComponent
     ]
 })
 
@@ -33,5 +36,9 @@ export class GameBoardComponent{
 
     setActiveDetailPart(y: number, x: number){
         return this.gameService.setDetailPart(y, x);
+    }
+
+    setStaticDetailPart(y: number, x: number){
+        return this.gameService.setStaticDetailPart(y, x);
     }
 }
