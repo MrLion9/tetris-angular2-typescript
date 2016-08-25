@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { start_point, Details, BOARD_SIZE, COLORS, KEYS } from './index';
+import { hexColors, start_point, Details, BOARD_SIZE, COLORS, KEYS } from './index';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class GameService{
         this.isStarted = true;
         this.isGameOver = false;
         this.score = 0;
-        this.interval = 1000;
+        this.interval = 800;
 
         this.update();
     }
@@ -117,12 +117,10 @@ export class GameService{
         return false;
     }
 
-    setStaticDetailPart(y: number, x: number){
+    getStyling(y: number, x: number){
         if(this.board[y][x] != "empty"){
-            return true;
-        }else{
-            return false;
-        }
+            return hexColors[ this.board[y][x] ];
+        }else return "transparent";
     }
 
     getColor (){

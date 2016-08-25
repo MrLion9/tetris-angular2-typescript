@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { GameService } from '../shared/index';
 import {DetailComponent} from './detail.component';
-import {StaticDetailComponent} from './static-detail.component';
 
 @Component({
     selector: 'game-board',
@@ -9,8 +8,8 @@ import {StaticDetailComponent} from './static-detail.component';
         <div class="row" *ngFor="let column of board; let y=index">
 			<div class="column"
 			     *ngFor="let row of column; let x=index; trackBy:x">
+			     <div class="detail" *ngIf="!setActiveDetailPart(y, x)" [style.background-color]="setStyling(y, x)"></div>
 			     <detail-part *ngIf="setActiveDetailPart(y, x)"></detail-part>
-			     <static-detail-part *ngIf="setStaticDetailPart(y, x)"></static-detail-part>
 			</div>
 		</div>`,
     styles: [
@@ -19,11 +18,11 @@ import {StaticDetailComponent} from './static-detail.component';
         'display: block;}',
         '.row {height: 28px;}',
         '.column {border: 1px dotted #455A64; width: 28px; height: 28px; display: inline-block; vertical-align: middle;' +
-        'text-align: center;}'
+        'text-align: center;}',
+        '.detail{width:100%;height:100%;}'
     ],
     directives: [
-        DetailComponent,
-        StaticDetailComponent
+        DetailComponent
     ]
 })
 
@@ -34,11 +33,12 @@ export class GameBoardComponent{
         this.board = this.gameService.board;
     }
 
-    setActiveDetailPart(y: number, x: number){
+    setActiveDetailPart( y: number, x: number ){
         return this.gameService.setDetailPart(y, x);
     }
 
-    setStaticDetailPart(y: number, x: number){
-        return this.gameService.setStaticDetailPart(y, x);
+    setStyling( y:number, x:number ){
+        return this.gameService.getStyling(y, x);
     }
+
 }

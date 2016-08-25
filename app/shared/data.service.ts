@@ -50,3 +50,11 @@ export const Details = [
 ];
 
 export const start_point = [0, 3];
+
+export const hexColors = {
+    green: "#da407d",
+    yellow: "#e8d04d",
+    blue: "#3753dd",
+    red: "#37dd6a",
+    black: "#882dd0"
+};
