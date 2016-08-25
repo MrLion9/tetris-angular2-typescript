@@ -22,6 +22,12 @@ export class GameService{
                 case KEYS.ENTER:
                     this.toggle();
                     break;
+                case KEYS.LEFT:
+                    this.moveLeftDetail();
+                    break;
+                case KEYS.RIGHT:
+                    this.moveRightDetail();
+                    break;
             }
         });
     }
@@ -83,6 +89,56 @@ export class GameService{
                 }
             }
         }
+        return true;
+    }
+
+    moveLeftDetail(){
+        let self = this;
+
+        if( this.bypassDetailPart(function(i, j, pos){
+            if( self.board[self.activePoint[0] + i][self.activePoint[1] + j - 1] != "empty") return false;
+            j = pos[i].length;
+        }) )
+        {
+            self.activePoint[1] = self.activePoint[1] - 1;
+        }
+    }
+
+    moveRightDetail(){
+        let self = this;
+
+        if( this.bypassDetailPartSinceTheEnd(function(i, j, pos){
+                if( self.board[self.activePoint[0] + i][self.activePoint[1] + j + 1] != "empty") return false;
+                j = -1;
+            }) )
+        {
+            self.activePoint[1] = self.activePoint[1] + 1;
+        }
+    }
+
+    bypassDetailPart(callback){
+        let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
+        for(let i = 0; i < pos.length; i++){
+            for (let j = 0; j < pos[i].length; j++){
+                if(pos[i][j] == 1){
+                    callback(i, j, pos);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    bypassDetailPartSinceTheEnd(callback){
+        let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
+        for(let i = 0; i < pos.length; i++){
+            for (let j = pos[i].length-1; j >= 0 ; j--){
+                if(pos[i][j] == 1){
+                    callback(i, j, pos);
+                }
+            }
+        }
+
         return true;
     }
 
