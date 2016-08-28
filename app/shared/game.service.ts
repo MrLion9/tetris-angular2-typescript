@@ -78,27 +78,25 @@ export class GameService{
         }
     }
 
-    moveDownDetail(){
-        let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
-        for(let i = 0; i < pos.length; i++){
-            for (let j = 0; j < pos[i].length; j++){
-                if(pos[i][j] == 1) {
-                    let y = this.activePoint[0] + i + 1;
-                    let x = this.activePoint[1] + j;
-                    if( y > (BOARD_SIZE - 1) || this.board[y][x] != "empty") return false;
-                }
-            }
-        }
-        return true;
+    moveDownDetail(): boolean{
+        let self = this;
+
+        let callback = (i: number, j:number, pos: number[][]): boolean => {
+            let y = self.activePoint[0] + i + 1;
+            let x = self.activePoint[1] + j;
+            if( y > (BOARD_SIZE - 1) || self.board[y][x] != "empty") return true;
+        };
+        return this.bypassDetailPart(callback, false, true);
     }
 
     moveLeftDetail(){
         let self = this;
 
-        if( this.bypassDetailPart(function(i, j, pos){
-            if( self.board[self.activePoint[0] + i][self.activePoint[1] + j - 1] != "empty") return false;
+        let callback = (i: number, j:number, pos: number[][]): boolean => {
+            if( self.board[self.activePoint[0] + i][self.activePoint[1] + j - 1] != "empty") return true;
             j = pos[i].length;
-        }) )
+        };
+        if( this.bypassDetailPart(callback, false, true) )
         {
             self.activePoint[1] = self.activePoint[1] - 1;
         }
@@ -106,53 +104,67 @@ export class GameService{
 
     moveRightDetail(){
         let self = this;
-
-        if( this.bypassDetailPartSinceTheEnd(function(i, j, pos){
-                if( self.board[self.activePoint[0] + i][self.activePoint[1] + j + 1] != "empty") return false;
-                j = -1;
-            }) )
+        let callback = (i: number, j:number, pos: number[][]): boolean => {
+            if( self.board[self.activePoint[0] + i][self.activePoint[1] + j + 1] != "empty") return true;
+            j = -1;
+        };
+        if( this.bypassDetailPartSinceTheEnd(callback, false, true) )
         {
             self.activePoint[1] = self.activePoint[1] + 1;
         }
     }
 
-    bypassDetailPart(callback){
+    bypassDetailPart(
+        callback: ( i: number, j:number, pos: number[][] ) => any,
+        callbackOk: boolean,
+        isOk: boolean
+    ) : boolean{
         let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
         for(let i = 0; i < pos.length; i++){
             for (let j = 0; j < pos[i].length; j++){
                 if(pos[i][j] == 1){
-                    callback(i, j, pos);
+                    if( callbackOk != undefined ){
+                        if( callback(i, j, pos) ) return callbackOk;
+                    }else{
+                        callback(i, j, pos);
+                    }
                 }
             }
         }
 
-        return true;
+        return isOk;
     }
 
-    bypassDetailPartSinceTheEnd(callback){
+    bypassDetailPartSinceTheEnd(
+        callback: ( i: number, j:number, pos: number[][] ) => any,
+        callbackOk: boolean,
+        isOk: boolean
+    ) : boolean{
         let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
         for(let i = 0; i < pos.length; i++){
             for (let j = pos[i].length-1; j >= 0 ; j--){
                 if(pos[i][j] == 1){
-                    callback(i, j, pos);
+                    if( callbackOk != undefined ){
+                        if( callback(i, j, pos) ) return callbackOk;
+                    }else{
+                        callback(i, j, pos);
+                    }
                 }
             }
         }
 
-        return true;
+        return isOk;
     }
 
     resetDetail(){
         if(typeof this.activeDetail != "undefined"){
-            let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
             let self = this;
-            for(let i = 0; i < pos.length; i++){
-                for (let j = 0; j < pos[i].length; j++){
-                    if(pos[i][j] == 1) {
-                        self.board[this.activePoint[0] + i][this.activePoint[1] + j] = self.activeDetail['color'];
-                    }
-                }
-            }
+
+            let callback = (i: number, j:number, pos: number[][]): void => {
+                self.board[this.activePoint[0] + i][this.activePoint[1] + j] = self.activeDetail['color'];
+            };
+
+            this.bypassDetailPart(callback, undefined, true);
         }
 
         this.activeDetail = Details[_.random(0, 4)];
@@ -162,15 +174,12 @@ export class GameService{
     }
 
     setDetailPart(y: number, x: number){
-        let pos = this.activeDetail['positions'][this.activeDetail['actualPosition'] ];
-        for(let i = 0; i < pos.length; i++){
-            for (let j = 0; j < pos[i].length; j++){
-                if(pos[i][j] == 1) {
-                    if(this.activePoint[0] + i == y && this.activePoint[1] + j == x) return true;
-                }
-            }
-        }
-        return false;
+        let self = this;
+
+        let callback = (i: number, j:number, pos: number[][]): boolean => {
+            if(this.activePoint[0] + i == y && this.activePoint[1] + j == x) return true;
+        };
+        return this.bypassDetailPart(callback, true, false);
     }
 
     getStyling(y: number, x: number){
