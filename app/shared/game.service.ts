@@ -22,6 +22,9 @@ export class GameService{
                 case KEYS.ENTER:
                     this.toggle();
                     break;
+                case KEYS.UP:
+                    this.changeActualPosition();
+                    break;
                 case KEYS.LEFT:
                     this.moveLeftDetail();
                     break;
@@ -78,6 +81,16 @@ export class GameService{
         }
     }
 
+    // TODO: check if twist of detail is impossible
+    changeActualPosition(): void {
+        let sum_pos = this.activeDetail['positions'].length;
+        if( this.activeDetail['actualPosition'] + 1 >= sum_pos){
+            this.activeDetail['actualPosition'] = 0;
+        }else{
+            this.activeDetail['actualPosition'] = this.activeDetail['actualPosition'] + 1;
+        }
+    }
+
     moveDownDetail(): boolean{
         let self = this;
 
@@ -94,24 +107,22 @@ export class GameService{
 
         let callback = (i: number, j:number, pos: number[][]): boolean => {
             if( self.board[self.activePoint[0] + i][self.activePoint[1] + j - 1] != "empty") return true;
+            if( self.activePoint[1] + j - 1 < 0 ) return true;
             j = pos[i].length;
         };
         if( this.bypassDetailPart(callback, false, true) )
-        {
             self.activePoint[1] = self.activePoint[1] - 1;
-        }
     }
 
     moveRightDetail(){
         let self = this;
         let callback = (i: number, j:number, pos: number[][]): boolean => {
             if( self.board[self.activePoint[0] + i][self.activePoint[1] + j + 1] != "empty") return true;
+            if( self.activePoint[1] + j + 1 > BOARD_SIZE/2 ) return true;
             j = -1;
         };
         if( this.bypassDetailPartSinceTheEnd(callback, false, true) )
-        {
             self.activePoint[1] = self.activePoint[1] + 1;
-        }
     }
 
     bypassDetailPart(

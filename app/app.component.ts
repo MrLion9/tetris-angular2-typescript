@@ -13,6 +13,9 @@ import { GameService } from './shared/index';
     directives:[
         GameBoardComponent
     ],
+    styles:[
+        'game-board {width: 280px;}'
+    ],
     providers:[
         GameService
     ]
@@ -22,7 +25,7 @@ export class AppComponent {
 
 
     constructor(){
-        this.title = "Hello foxy!";
+        this.title = "";
     }
 
 }
