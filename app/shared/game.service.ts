@@ -91,6 +91,24 @@ export class GameService{
         }
     }
 
+    checkFullStripes(){
+        for(let i = this.board.length-1; i >= 0; i--){
+            if(!this.checkIsThereEmpty(this.board[i]) ){
+                this.board.splice(i, 1);
+                this.board.unshift( Array(BOARD_SIZE/2).fill("empty") );
+            }
+        }
+    }
+
+    checkIsThereEmpty(stripe: string[]) : boolean{
+        for (let j = 0; j < stripe.length ; j++){
+            if(stripe[j] == "empty"){
+                return true;
+            }
+        }
+        return false;
+    }
+
     moveDownDetail(): boolean{
         let self = this;
 
@@ -177,6 +195,8 @@ export class GameService{
 
             this.bypassDetailPart(callback, undefined, true);
         }
+
+        this.checkFullStripes();
 
         this.activeDetail = Details[_.random(0, 4)];
         this.activeDetail['actualPosition'] = 0;
