@@ -93,10 +93,17 @@ export class GameService{
 
     checkFullStripes(){
         for(let i = this.board.length-1; i >= 0; i--){
-            if(!this.checkIsThereEmpty(this.board[i]) ){
-                this.board.splice(i, 1);
-                this.board.unshift( Array(BOARD_SIZE/2).fill("empty") );
-            }
+            this.recursiveCheck(i);
+        }
+    }
+
+    recursiveCheck(i: number): void{
+        if(!this.checkIsThereEmpty(this.board[i]) ){
+            this.board.splice(i, 1);
+            this.board.unshift( Array(BOARD_SIZE/2).fill("empty") );
+            this.recursiveCheck(i);
+        }else{
+            return;
         }
     }
 
