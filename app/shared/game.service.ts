@@ -11,17 +11,21 @@ export class GameService{
     board: string[][];
     activeDetail: {};
     activePoint: number[];
+    audio: any;
 
     constructor (){
         this.setupBoard();
 
         this.resetDetail();
+        this.score = 0;
+
+        this.audio = new Audio('../../sound.mp3');
 
         window.addEventListener('keyup', (e: any) => {
             switch (e.keyCode) {
-                case KEYS.ENTER:
-                    this.toggle();
-                    break;
+                // case KEYS.ENTER:
+                //     this.toggle();
+                //     break;
                 case KEYS.UP:
                     this.changeActualPosition();
                     break;
@@ -33,15 +37,23 @@ export class GameService{
                     break;
             }
         });
+
+        window.addEventListener('click', (e: any) => {
+            if( $(e.target).hasClass('play')) this.toggle();
+            if( $(e.target).hasClass('pause')) this.pause();
+        });
     }
 
     start(){
         this.isStarted = true;
         this.isGameOver = false;
-        this.score = 0;
-        this.interval = 800;
+        this.interval = 500;
 
         this.update();
+    }
+
+    pause(){
+        this.isStarted = false;
     }
 
     toggle() {
@@ -91,7 +103,7 @@ export class GameService{
         }
     }
 
-    checkFullStripes(){
+    checkFullStripes(): void{
         for(let i = this.board.length-1; i >= 0; i--){
             this.recursiveCheck(i);
         }
@@ -101,6 +113,10 @@ export class GameService{
         if(!this.checkIsThereEmpty(this.board[i]) ){
             this.board.splice(i, 1);
             this.board.unshift( Array(BOARD_SIZE/2).fill("empty") );
+
+            this.audio.play();
+            this.score += 100;
+
             this.recursiveCheck(i);
         }else{
             return;
@@ -202,6 +218,8 @@ export class GameService{
 
             this.bypassDetailPart(callback, undefined, true);
         }
+
+        this.score += 10;
 
         this.checkFullStripes();
 
