@@ -8,4 +8,3 @@ $ npm start
 ```
 
 And tetris starts on localhost:3000  
-To start the game press Enter
